@@ -1,0 +1,40 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="text-center w-50">
+        <h2>Create Listing</h2>
+
+        {% if message %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endif %}
+
+        <form action="{% url 'create_listing' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="text" name="username" placeholder="Title" required>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" name="description" placeholder="Description" required></textarea>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="number" min="1" name="price" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="url" name="image-url" placeholder="Image URL">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="category" placeholder="Category">
+            </div>
+            <div class="d-flex justify-content-center">
+                <input class="btn btn-primary mr-2" type="submit" value="Create">
+                <a href="{% url 'index' %}" class="btn btn-danger">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+    
+
+{% endblock %}
