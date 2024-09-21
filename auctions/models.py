@@ -8,7 +8,7 @@ class User(AbstractUser):
 class AuctionListing(models.Model):
     title = models.CharField(max_length=64)
     description = models.TextField()
-    starting_bid = models.DecimalField(max_digits=6, decimal_places=2)
+    starting_bid = models.DecimalField(max_digits=8, decimal_places=2)
     image_url = models.URLField(null=True, blank=True)
     category = models.CharField(max_length=64, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
