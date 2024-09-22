@@ -22,8 +22,9 @@
                     <p>Category: No category listed</p>
                 {% endif %}
                 <p style="font-size: x-large; font-weight: bold;">${{ listing.starting_bid }}</p>
+                <p>{{ bid_count }} bid(s) so far. Your bid is the current bid.</p>
             </div>
-            <form action="" method="post"> <!--bin-->
+            <form action="{% url 'bid' listing.id %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <input class="form-control" type="number" min="0.01" max="999999" step="0.01" name="bid" placeholder="Bid" required>
