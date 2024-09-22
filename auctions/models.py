@@ -25,5 +25,8 @@ class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
     listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="watchlist")
 
-# class Comment(models.Model):
-#     pass
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="comments")
+    comment = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
