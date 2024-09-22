@@ -9,18 +9,13 @@ from django.contrib.auth.decorators import login_required
 
 from auctions.helpers import get_current_bidder, has_user_won_auction, is_in_watchlist, is_user_owning_listing
 
-from .models import AuctionListing, Bid, User
+from .models import AuctionListing, User
 
-
-def index(request):
-    return render(request, "auctions/index.html", {
-        "auction_list": AuctionListing.objects.all().exclude(active=False)
-    })
 
 def index(request):
     category_name = request.GET.get('category')
     if category_name:
-        auctions = AuctionListing.objects.filter(category=category_name)
+        auctions = AuctionListing.objects.filter(category=category_name).exclude(active=False)
     else:
         auctions = AuctionListing.objects.all().exclude(active=False)
     return render(request, "auctions/index.html", {
