@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Categories - Auctions
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-center mb-4">Categories</h2>    
+
+    {% if categories %}
+        <div class="d-flex justify-content-center">
+            <ul>
+                {% for category in categories %}
+                <li><a href="{% url 'index' %}?category={{ category }}">{{ category }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="text-center">No categories found.</p>
+    {% endif %}
+    
+{% endblock %}

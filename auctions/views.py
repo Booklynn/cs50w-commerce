@@ -17,6 +17,16 @@ def index(request):
         "auction_list": AuctionListing.objects.all().exclude(active=False)
     })
 
+def index(request):
+    category_name = request.GET.get('category')
+    if category_name:
+        auctions = AuctionListing.objects.filter(category=category_name)
+    else:
+        auctions = AuctionListing.objects.all().exclude(active=False)
+    return render(request, "auctions/index.html", {
+        "auctions": auctions,
+    })
+
 
 def login_view(request):
     if request.method == "POST":
@@ -105,6 +115,7 @@ def listing_view(request, listing_id):
     bid_count = current_listing.bids.count()
     current_bidder = get_current_bidder(current_listing)
     in_watchlist = is_in_watchlist(request.user, current_listing)
+    comments = current_listing.comments.all()
         
     if is_user_owning_listing(request.user, current_listing.owner):
         display_message = "You are the creator of this listing."
@@ -120,7 +131,8 @@ def listing_view(request, listing_id):
         "bid_count": bid_count,
         "current_bidder": current_bidder,
         "display_message": display_message,
-        "in_watchlist": in_watchlist
+        "in_watchlist": in_watchlist,
+        "comments": comments
     })
 
 
@@ -142,11 +154,11 @@ def bid(request, listing_id):
         
         if Decimal(bid_amount) > current_listing.starting_bid and current_listing.active:
             try:
-                Bid.objects.create(
+                current_listing.bids.create(
                     listing=current_listing,
                     amount=bid_amount,
                     bidder=request.user
-                ).save()
+                )
 
                 current_listing.starting_bid = bid_amount
                 current_listing.save()
@@ -227,4 +239,33 @@ def watchlist_view(request):
 
     return render(request, "auctions/watchlist.html", {
         "watchlists": filtered_active_watchlists
+    })
+
+
+@login_required(login_url='/login')
+def comment(request, listing_id):
+    if request.method == "POST":
+        comment = request.POST["comment"]
+        current_listing = AuctionListing.objects.get(pk=listing_id)
+        
+        try:
+            current_listing.comments.create(
+                user=request.user,
+                comment=comment
+            )
+            messages.success(request, "Comment added successfully.")
+            return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+        
+        except IntegrityError:
+            messages.error(request, "Error adding comment.")
+            return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+    
+    else:
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+
+
+def categories(request):
+    categories = AuctionListing.objects.values_list("category", flat=True).distinct().exclude(category="").exclude(active=False)
+    return render(request, "auctions/categories.html", {
+        "categories": categories
     })

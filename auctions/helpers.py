@@ -10,4 +10,5 @@ def has_user_won_auction(current_user, current_listing):
         return current_user == current_bidder
 
 def is_in_watchlist(current_user, current_listing):
-    return current_user.watchlist.filter(listing=current_listing).exists()
+    if current_user.is_authenticated:
+        return current_user.watchlist.filter(listing=current_listing).exists()

@@ -3,7 +3,7 @@
 {% block body %}
     <h2 class="text-center mb-4">Active Listings</h2>    
 
-    {% for item in auction_list %}
+    {% for item in auctions %}
         <div class="container">
             <a href="{% url 'listing' item.id %}" class="text-decoration-none text-dark">
                 <div class="row align-items-center justify-content-center">
